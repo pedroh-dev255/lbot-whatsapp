@@ -6,6 +6,34 @@ import { downloadMediaMessage } from '@whiskeysockets/baileys'
 import api from '@victorsouzaleal/lbot-api-comandos'
 import {comandosInfo} from '../comandos/comandos.js'
 
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+const dataAtual = new Date();
+const mesAno = `${String(dataAtual.getMonth() + 1).padStart(2, '0')}/${dataAtual.getFullYear()}`;
+
+
+const contadorPath = path.join(__dirname, '../../dados/contadorSticker.json');
+
+let contadorFigurinhas = {};
+if (fs.existsSync(contadorPath)) {
+    contadorFigurinhas = JSON.parse(fs.readFileSync(contadorPath));
+}
+
+// Inicializar contador para o mês atual, se necessário
+if (!contadorFigurinhas[mesAno]) {
+    contadorFigurinhas[mesAno] = 0;
+}
+
+// Função para incrementar o contador
+const incrementarContador = () => {
+    contadorFigurinhas[mesAno]++;
+    fs.writeFileSync(contadorPath, JSON.stringify(contadorFigurinhas, null, 2));
+};
 
 export const figurinhas = async(c, mensagemBaileys, botInfo) => {
     //Atribuição de valores
@@ -60,6 +88,9 @@ export const figurinhas = async(c, mensagemBaileys, botInfo) => {
                     if(dadosMensagem.tipo == tiposMensagem.video && dadosMensagem.seconds > 9) return socket.responderTexto(c, id_chat, comandos_info.figurinhas.s.msgs.erro_video, mensagem)
                     let bufferMidia = await downloadMediaMessage(dadosMensagem.message, "buffer")
                     let {resultado: resultadoSticker} = await api.Stickers.criarSticker(bufferMidia, {pack: nome_pack?.trim(), autor: nome_bot?.trim(), fps: 9, tipo: tipoFigurinha})
+                    
+                    incrementarContador();
+
                     await socket.enviarFigurinha(c, id_chat, resultadoSticker)
                 } catch(err){
                     if(!err.erro) throw err
@@ -87,6 +118,9 @@ export const figurinhas = async(c, mensagemBaileys, botInfo) => {
                     if(!emoji1 || !emoji2) return await socket.responderTexto(c, id_chat, erroComandoMsg(comando, botInfo), mensagem)
                     let {resultado: resultadoEmoji} = await api.Imagens.misturarEmojis(emoji1, emoji2)
                     let {resultado : resultadoSticker} = await api.Stickers.criarSticker(resultadoEmoji, {pack: nome_pack?.trim(), autor: nome_bot?.trim()})
+
+                    incrementarContador();
+
                     await socket.enviarFigurinha(c, id_chat, resultadoSticker)
                 } catch(err){
                     if(!err.erro) throw err
@@ -108,6 +142,9 @@ export const figurinhas = async(c, mensagemBaileys, botInfo) => {
                     let bufferMidia = await downloadMediaMessage(dadosMensagem.message, "buffer")
                     let {resultado: resultadoImg} = await api.Imagens.removerFundo(bufferMidia)
                     let {resultado : resultadoSticker} = await api.Stickers.criarSticker(resultadoImg, {pack: nome_pack?.trim(), autor: nome_bot?.trim()})
+
+                    incrementarContador();
+
                     await socket.enviarFigurinha(c, id_chat, resultadoSticker)
                 } catch(err){
                     if(!err.erro) throw err
@@ -121,6 +158,9 @@ export const figurinhas = async(c, mensagemBaileys, botInfo) => {
                     let usuarioTexto = texto_recebido
                     let {resultado : resultadoImg} = await api.Imagens.textoParaImagem(usuarioTexto)
                     let {resultado : resultadoSticker} = await api.Stickers.criarSticker(resultadoImg, {pack: nome_pack?.trim(), autor: nome_bot?.trim()})
+
+                    incrementarContador();
+
                     await socket.enviarFigurinha(c, id_chat, resultadoSticker)
                 } catch(err){
                     if(!err.erro) throw err
@@ -134,6 +174,9 @@ export const figurinhas = async(c, mensagemBaileys, botInfo) => {
                     let usuarioTexto = texto_recebido
                     let {resultado: resultadoGif} =  await api.Imagens.textoParaImagem(usuarioTexto, true)
                     let {resultado: resultadoSticker} = await api.Stickers.criarSticker(resultadoGif, {pack: nome_pack?.trim(), autor: nome_bot?.trim()})
+
+                    incrementarContador();
+
                     await socket.enviarFigurinha(c, id_chat, resultadoSticker)
                 } catch (err){
                     if(!err.erro) throw err
@@ -162,6 +205,9 @@ export const autoSticker = async(c, mensagemBaileys, botInfo)=>{
             if(tipo == tiposMensagem.video && segundos > 9) return
             let bufferMidia = await downloadMediaMessage(mensagem, "buffer")
             let {resultado: resultadoSticker} = await api.Stickers.criarSticker(bufferMidia, {pack: nome_pack?.trim(), autor: nome_bot?.trim(), fps: 9})
+
+            incrementarContador();
+
             await socket.enviarFigurinha(c, id_chat, resultadoSticker)
         }
     } catch(err){
