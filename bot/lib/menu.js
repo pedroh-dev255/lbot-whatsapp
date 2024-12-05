@@ -1,7 +1,8 @@
 
 export const menuPrincipal  = (botInfo)=> { 
     let {nome_bot, nome_adm, prefixo} = botInfo
-    return `|
+    const imagemMenu = './bot/midia/fotomenu/ftMenuPrincipal.jpg';
+    const textoMenu = `|
 |>----〖 *🤖 ${nome_bot?.trim()}®* 〗
 |
 |>---〖🔎 *MENU PRINCIPAL*〗
@@ -16,6 +17,8 @@ export const menuPrincipal  = (botInfo)=> {
 |- *${prefixo}menu* 5  🕹️ Diversão/Jogos
 |
 ╰╼❥ ${nome_bot?.trim()}® by *${nome_adm?.trim()}*`
+
+    return { textoMenu, imagemMenu };
 }
 
 export const menuFigurinhas = (botInfo)=>{
@@ -280,6 +283,7 @@ export const menuAdmin = (botInfo)=>{
 |- *${prefixo}nomesticker* nome - Altera nome do pacote de figurinhas
 |- *${prefixo}prefixo* simbolo - Altera o prefixo dos comandos
 |- *${prefixo}fotobot* - Altera foto do BOT
+|- *${prefixo}fotomenu* - Altera foto do Menu Principal
 |- *${prefixo}estado* online, offline ou manutencao - Altera o estado atual do bot.
 |
 |--〖🛠️ *GERAL*〗

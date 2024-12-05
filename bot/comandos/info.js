@@ -100,8 +100,14 @@ export const info = async(c, mensagemBaileys, botInfo) => {
                     dadosResposta += `═════════════════\n`
 
                     if(!args.length){
-                        let menuResposta = menu.menuPrincipal(botInfo)
-                        await socket.enviarTexto(c, id_chat, dadosResposta+menuResposta)
+                        const { textoMenu, imagemMenu } = menu.menuPrincipal(botInfo);
+                        let menuResposta = textoMenu;
+
+                        
+                        await socket.enviarArquivoUrl(c, tiposMensagem.imagem, id_chat, imagemMenu, dadosResposta+menuResposta);
+
+
+                        //await socket.enviarTexto(c, id_chat, dadosResposta+menuResposta)
                     } else {
                         let usuarioOpcao = texto_recebido
                         let menuResposta = menu.menuPrincipal(botInfo)

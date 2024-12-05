@@ -105,7 +105,7 @@ export class BotControle{
         }
 
         //SE NÃO FOR UM USUARIO DO TIPO DONO OU FOR ADMINISTRADOR DO GRUPO , NÃO FAÇA A CONTAGEM.
-            if(tipo_usuario == "dono" || isAdmin){
+        if(tipo_usuario == "dono" || isAdmin){
             resposta = {comando_bloqueado : false}
         } else {
             //VERIFICA SE O USUARIO ESTÁ LIMITADO

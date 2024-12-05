@@ -10,6 +10,12 @@ import {tiposMensagem} from '../baileys/mensagem.js'
 import {downloadMediaMessage} from '@whiskeysockets/baileys'
 import os from 'node:os'
 import {comandosInfo} from '../comandos/comandos.js'
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 
 export const admin = async(c, mensagemBaileys, botInfo) => {
@@ -282,6 +288,31 @@ export const admin = async(c, mensagemBaileys, botInfo) => {
                     let fotoBuffer = await downloadMediaMessage(dadosMensagem.mensagem, "buffer")
                     await socket.alterarFotoPerfil(c, numero_bot, fotoBuffer)
                     await socket.responderTexto(c, id_chat, comandos_info.admin.fotobot.msgs.sucesso, mensagem)
+                } catch(err){
+                    throw err
+                }
+                break
+
+            case "fotomenu":
+                try{
+                    if(!mensagem_midia && !mensagem_citada) return await socket.responderTexto(c, id_chat, erroComandoMsg(comando, botInfo) , mensagem)
+                    let dadosMensagem = {
+                        tipo : (mensagem_midia) ? tipo : citacao.tipo,
+                        mimetype : (mensagem_midia)? mimetype : citacao.mimetype,
+                        mensagem: (mensagem_midia) ? mensagem : citacao.mensagem
+                    }
+                    if(dadosMensagem.tipo != tiposMensagem.imagem) return await socket.responderTexto(c, id_chat, erroComandoMsg(comando, botInfo) , mensagem)
+                    let fotomenuBuffer = await downloadMediaMessage(dadosMensagem.mensagem, "buffer")
+                    
+                    
+                    // Caminho onde a foto será salva
+                    const fotoMenuPath = path.join(__dirname, '../midia/fotomenu/ftMenuPrincipal.jpg'); 
+
+                    // Salvar o buffer na pasta de dados
+                    fs.writeFileSync(fotoMenuPath, fotomenuBuffer);
+
+
+                    await socket.responderTexto(c, id_chat, comandos_info.admin.fotomenu.msgs.sucesso, mensagem)
                 } catch(err){
                     throw err
                 }

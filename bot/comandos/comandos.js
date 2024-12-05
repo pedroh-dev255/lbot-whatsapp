@@ -1192,6 +1192,13 @@ export function comandosInfo(botInfo){
                     sucesso: "🤖✅ A foto do BOT foi alterada com sucesso."
                 }
             },
+            fotomenu: {
+                descricao: '',
+                guia: `Ex: Envie/responda uma *imagem* com *${prefixo}fotomenu* - Altera a foto do menu principal.\n`,
+                msgs: {
+                    sucesso: "🤖✅ A foto do Menu Principal foi alterada com sucesso."
+                }
+            },
             nomebot: {
                 descricao: '',
                 guia: `Ex: *${prefixo}nomebot* Teste123 - Muda o nome do *BOT* para *Teste123* e atualiza os menus com o novo nome.\n`,
